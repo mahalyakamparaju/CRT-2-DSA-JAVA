@@ -1,0 +1,22 @@
+class Main {
+    // Wrapper method for better usability
+    static int factorial(int n) {
+        return factHelper(n, 1);
+    }
+
+    // The actual tail-recursive function
+    private static int factHelper(int n, int result) {
+        // Base case: 0! is 1
+        if (n <= 0) {
+            return result;
+        }
+        // Recursive step: pass the accumulated result forward
+        return factHelper(n - 1, result * n);
+    }
+
+    public static void main(String[] args) {
+        int number = 5;
+        int output = factorial(number);
+        System.out.println("The factorial of " + number + " is: " + output);
+    }
+}

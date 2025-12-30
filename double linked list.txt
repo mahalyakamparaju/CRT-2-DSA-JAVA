@@ -1,0 +1,151 @@
+import java.util.*;
+
+class Node {
+    int data;
+    Node llink; // Left link (previous)
+    Node rlink; // Right link (next)
+
+    Node(int data) {
+        this.data = data;
+        this.llink = null;
+        this.rlink = null;
+    }
+}
+
+class DoubleLinkedList {
+    Node head;
+    String name;
+
+    DoubleLinkedList(String name) {
+        head = null;
+        this.name = name;
+    }
+
+    // Display the list from head to tail
+    void display() {
+        if (head == null) {
+            System.out.println("List is empty ....");
+            return;
+        }
+        Node tempHead = head;
+        System.out.print(name + ": ");
+        while (tempHead != null) {
+            System.out.print(tempHead.data + (tempHead.rlink != null ? " <--> " : ""));
+            tempHead = tempHead.rlink;
+        }
+        System.out.println(" --> Null");
+    }
+
+    void insertAtBegin(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+        } else {
+            newNode.rlink = head;
+            head.llink = newNode;
+            head = newNode;
+        }
+    }
+
+    void insertAtEnd(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+        } else {
+            Node tempHead = head;
+            while (tempHead.rlink != null) {
+                tempHead = tempHead.rlink;
+            }
+            tempHead.rlink = newNode;
+            newNode.llink = tempHead;
+        }
+    }
+
+    // Inserts BEFORE the target element
+    void insertAtMid(int target, int data) {
+        if (head == null) {
+            System.out.println("List is empty ....");
+            return;
+        }
+        if (head.data == target) {
+            insertAtBegin(data);
+            return;
+        }
+
+        Node newNode = new Node(data);
+        Node current = head;
+
+        while (current != null) {
+            if (current.data == target) {
+                newNode.rlink = current;
+                newNode.llink = current.llink;
+                if (current.llink != null) {
+                    current.llink.rlink = newNode;
+                }
+                current.llink = newNode;
+                return;
+            }
+            current = current.rlink;
+        }
+        System.out.println("Target " + target + " not found.");
+    }
+
+    void delete(int target) {
+        if (head == null) return;
+
+        // Case 1: Target is the head
+        if (head.data == target) {
+            head = head.rlink;
+            if (head != null) {
+                head.llink = null;
+            }
+            return;
+        }
+
+        Node temp = head;
+        while (temp != null) {
+            if (temp.data == target) {
+                // Link previous node to next node
+                if (temp.llink != null) {
+                    temp.llink.rlink = temp.rlink;
+                }
+                // Link next node back to previous node
+                if (temp.rlink != null) {
+                    temp.rlink.llink = temp.llink;
+                }
+                return;
+            }
+            temp = temp.rlink;
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        DoubleLinkedList dll = new DoubleLinkedList("MyDLL");
+        
+        dll.insertAtBegin(10);
+        dll.insertAtBegin(5);
+        dll.insertAtBegin(1);
+        dll.insertAtEnd(15);
+        dll.insertAtEnd(20);
+        
+        System.out.println("Before Insertion:");
+        dll.display(); // 1 <--> 5 <--> 10 <--> 15 <--> 20
+
+        dll.insertAtMid(15, 12);
+        System.out.println("After inserting 12 before 15:");
+        dll.display(); // 1 <--> 5 <--> 10 <--> 12 <--> 15 <--> 20
+
+        dll.delete(10);
+        System.out.println("After deleting 10:");
+        dll.display(); // 1 <--> 5 <--> 12 <--> 15 <--> 20
+    }
+}
+
+
+result:
+
+Inorder   : 10 20 25 30 40 50 
+Preorder  : 30 20 10 25 40 50 
+Postorder : 10 25 20 50 40 30 

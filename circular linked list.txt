@@ -1,0 +1,130 @@
+import java.util.*;
+
+class Node {
+    int data;
+    Node next;
+
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class CircularLinkedList {
+    Node head;
+    String name;
+
+    CircularLinkedList(String name) {
+        this.head = null;
+        this.name = name;
+    }
+
+    void display() {
+        if (head == null) {
+            System.out.println("List is empty ....");
+            return;
+        }
+        Node temp = head;
+        System.out.print(name + ": ");
+        do {
+            System.out.print(temp.data + " -> ");
+            temp = temp.next;
+        } while (temp != head); // Stop when we circle back to head
+        System.out.println("(Back to Head: " + head.data + ")");
+    }
+
+    void insertAtBegin(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            newNode.next = head; // Point to itself
+        } else {
+            Node temp = head;
+            // Must find the last node to update its 'next' to the new head
+            while (temp.next != head) {
+                temp = temp.next;
+            }
+            newNode.next = head;
+            temp.next = newNode;
+            head = newNode;
+        }
+    }
+
+    void insertAtEnd(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            newNode.next = head;
+            return;
+        }
+        Node temp = head;
+        while (temp.next != head) {
+            temp = temp.next;
+        }
+        temp.next = newNode;
+        newNode.next = head;
+    }
+
+    void delete(int target) {
+        if (head == null) return;
+
+        Node current = head;
+        Node prev = null;
+
+        // Case 1: Target is the head
+        if (head.data == target) {
+            // If only one node exists
+            if (head.next == head) {
+                head = null;
+                return;
+            }
+            // Find last node to update its pointer
+            Node last = head;
+            while (last.next != head) {
+                last = last.next;
+            }
+            head = head.next;
+            last.next = head;
+            return;
+        }
+
+        // Case 2: Target is somewhere else
+        prev = head;
+        current = head.next;
+        while (current != head) {
+            if (current.data == target) {
+                prev.next = current.next;
+                return;
+            }
+            prev = current;
+            current = current.next;
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        CircularLinkedList cll = new CircularLinkedList("MyCircularList");
+
+        cll.insertAtEnd(10);
+        cll.insertAtEnd(20);
+        cll.insertAtEnd(30);
+        cll.insertAtBegin(5);
+
+        System.out.println("Initial Circular List:");
+        cll.display(); // 5 -> 10 -> 20 -> 30 -> (Back to Head: 5)
+
+        cll.delete(20);
+        System.out.println("After deleting 20:");
+        cll.display(); // 5 -> 10 -> 30 -> (Back to Head: 5)
+        
+        cll.delete(5);
+        System.out.println("After deleting head (5):");
+        cll.display(); // 10 -> 30 -> (Back to Head: 10)
+    }
+}
+
+result :
+Inorder   : 10 20 25 30 40 50 
+Preorder  : 30 20 10 25 40 50 
+Postorder : 10 25 20 50 40 30 

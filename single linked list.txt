@@ -1,0 +1,136 @@
+import java.util.*;
+
+class Node {
+    int data;
+    Node next; // Only one link in singly linked list
+
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class SinglyLinkedList {
+    Node head;
+    String name;
+
+    SinglyLinkedList(String name) {
+        head = null;
+        this.name = name;
+    }
+
+    // Display the list
+    void display() {
+        if (head == null) {
+            System.out.println("List is empty ....");
+            return;
+        }
+        Node temp = head;
+        System.out.print(name + ": ");
+        while (temp != null) {
+            System.out.print(temp.data + " -> ");
+            temp = temp.next;
+        }
+        System.out.println("Null");
+    }
+
+    void insertAtBegin(int data) {
+        Node newNode = new Node(data);
+        newNode.next = head;
+        head = newNode;
+    }
+
+    void insertAtEnd(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            return;
+        }
+        Node temp = head;
+        while (temp.next != null) {
+            temp = temp.next;
+        }
+        temp.next = newNode;
+    }
+
+    // Inserts BEFORE the target element
+    void insertAtMid(int target, int data) {
+        if (head == null) {
+            System.out.println("List is empty ....");
+            return;
+        }
+        
+        // If target is at the head
+        if (head.data == target) {
+            insertAtBegin(data);
+            return;
+        }
+
+        Node newNode = new Node(data);
+        Node current = head;
+        Node prev = null;
+
+        while (current != null) {
+            if (current.data == target) {
+                newNode.next = current;
+                prev.next = newNode;
+                return;
+            }
+            prev = current;
+            current = current.next;
+        }
+        System.out.println("Target " + target + " not found.");
+    }
+
+    void delete(int target) {
+        if (head == null) return;
+
+        // If head is the target
+        if (head.data == target) {
+            head = head.next;
+            return;
+        }
+
+        Node current = head;
+        Node prev = null;
+
+        while (current != null) {
+            if (current.data == target) {
+                // Skip the current node by linking prev to current's next
+                prev.next = current.next;
+                return;
+            }
+            prev = current;
+            current = current.next;
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        SinglyLinkedList sll = new SinglyLinkedList("MySinglyList");
+
+        sll.insertAtBegin(10);
+        sll.insertAtBegin(5);
+        sll.insertAtBegin(1);
+        sll.insertAtEnd(15);
+        sll.insertAtEnd(20);
+
+        System.out.println("Initial List:");
+        sll.display(); // 1 -> 5 -> 10 -> 15 -> 20 -> Null
+
+        sll.insertAtMid(15, 12);
+        System.out.println("After inserting 12 before 15:");
+        sll.display(); // 1 -> 5 -> 10 -> 12 -> 15 -> 20 -> Null
+
+        sll.delete(10);
+        System.out.println("After deleting 10:");
+        sll.display(); // 1 -> 5 -> 12 -> 15 -> 20 -> Null
+    }
+}
+
+
+result : 
+Inorder   : 10 20 25 30 40 50 
+Preorder  : 30 20 10 25 40 50 
+Postorder : 10 25 20 50 40 30 
